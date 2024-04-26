@@ -7629,24 +7629,20 @@ The radius of each 2 * 2 Circle is [1, 1]
     <span class="n">temp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">=-</span><span class="mi">1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
     <span class="n">temp</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">temp</span>
-<span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">count</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="n">vector</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">count</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
     <span class="n">count</span><span class="o">+=</span><span class="mi">1</span>
     <span class="n">temp</span><span class="o">=</span><span class="n">max_element</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
     <span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">=</span><span class="n">temp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">temp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">theta</span><span class="o">=</span><span class="n">solve_equation</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">j</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
     
     <span class="n">E</span><span class="o">=</span><span class="n">GenerateE</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">theta</span><span class="p">)</span>
-    <span class="k">if</span><span class="p">(</span><span class="n">count</span><span class="o">==</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">vector</span><span class="o">=</span><span class="n">E</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"Eigenvectors:"</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
+    <span class="n">P</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
     <span class="n">Et</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
     <span class="n">A_new</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">A</span><span class="p">),</span> <span class="n">Et</span><span class="p">)</span>
     <span class="k">if</span><span class="p">(</span><span class="n">count</span><span class="o">==</span><span class="n">max_iter</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">A_new</span>
+        <span class="k">return</span> <span class="n">A_new</span><span class="p">,</span><span class="n">P</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jacobian</span><span class="p">(</span><span class="n">A_new</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">jacobian</span><span class="p">(</span><span class="n">A_new</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span><span class="n">P</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7661,7 +7657,8 @@ The radius of each 2 * 2 Circle is [1, 1]
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">count</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">B</span><span class="o">=</span><span class="n">jacobian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">count</span><span class="p">)</span>
+<span class="n">P</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">B</span><span class="p">,</span><span class="n">P</span><span class="o">=</span><span class="n">jacobian</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">count</span><span class="p">,</span><span class="n">P</span><span class="p">)</span>
 <span class="n">eigenvalue</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
@@ -7669,12 +7666,11 @@ The radius of each 2 * 2 Circle is [1, 1]
             <span class="n">eigenvalue</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
 
 
-
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Eigenvalues"</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">eigenvalue</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
+<span class="n">eigenvectors</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">P</span><span class="p">)):</span>
+    <span class="n">eigenvectors</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">,</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eigenvalue</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">eigenvectors</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7687,14 +7683,9 @@ The radius of each 2 * 2 Circle is [1, 1]
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Eigenvectors:
-[[ 0.70710678  0.70710678]
- [-0.70710678  0.70710678]]
-
-Eigenvalues
--2.299347170293093e-17
-1.9999999999999998
-
+<pre>[-2.29934717e-17  2.00000000e+00]
+[[ 0.70710678 -0.70710678]
+ [ 0.70710678  0.70710678]]
 </pre>
 </div>
 </div>
